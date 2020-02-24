@@ -6,6 +6,14 @@ func ClearLine() {
 	fmt.Printf("\033[K")
 }
 
+func Clear() {
+	fmt.Printf("\033[2J")
+}
+
+func Reset() {
+	fmt.Printf("\033c")
+}
+
 func SaveCursorPosition() {
 	fmt.Printf("\033[s")
 }

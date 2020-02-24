@@ -15,7 +15,7 @@ type SimpleBar struct {
 func NewSimpleBar() *SimpleBar {
 	return &SimpleBar{
 		anchor: AnchorTop,
-		text:   "I am a simple bar.",
+		text:   "  Environment: PROD      Policies: prod.aws.writer,prod.ssh",
 	}
 }
 

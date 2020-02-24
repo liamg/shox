@@ -7,6 +7,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/liamg/shox/internal/pkg/ansi"
+
 	"github.com/liamg/shox/internal/pkg/decorators"
 )
 
@@ -58,6 +60,7 @@ func (p *Proxy) Close() {
 	p.closeOnce.Do(func() {
 		close(p.closeChan)
 		<-p.processCompletionChan
+		ansi.Reset()
 	})
 }
 
