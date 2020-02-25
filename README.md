@@ -56,6 +56,8 @@ Helpers create dynamic output in your status bar. You can use one by adding it t
 | battery | Show current battery charge % | {battery}      | 20%            |
 | bash    | Run a custom bash command     | {bash:echo hi} | hi
 
+Ideally this list would be much longer - please feel free to PR more helpers! You can see simple examples [here](https://github.com/liamg/shox/tree/master/pkg/helpers).
+
 ## Why?
 
 I frequently needed a way to have a quick overview of several things without cramming them into my PS1, and to update those things dynamicly.
