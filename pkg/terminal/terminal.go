@@ -42,7 +42,13 @@ func (t *Terminal) AddDecorator(d decorators.Decorator) {
 	t.proxy.AddDecorator(d)
 }
 
-func (t *Terminal) Run() {
+func (t *Terminal) Run() error {
+
+	if os.Getenv("SHOX") != "" {
+		return fmt.Errorf("shox is already running in this terminal")
+	}
+
+	_ = os.Setenv("SHOX", "1")
 
 	t.proxy.Start()
 	defer t.proxy.Close()
