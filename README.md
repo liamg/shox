@@ -2,7 +2,7 @@
 
 [![Travis Build Status](https://travis-ci.org/liamg/shox.svg?branch=master)](https://travis-ci.org/liamg/shox)
 
-A customisable terminal status bar with universal shell/terminal compatibility.  
+A customisable terminal status bar with universal shell/terminal compatibility. Currently works on Mac/Linux.
 
 ![](./screenshot.png)
 
