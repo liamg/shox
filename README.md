@@ -11,8 +11,10 @@ A customisable terminal status bar with universal shell/terminal compatibility.
 **NOTE** This is still very experimental. I'm using it locally without any problems right now, but there's still a lot of testing and tweaking to do. Feel free to try it out, but get ready for some potential bugginess!
 
 ```bash
-curl -s "https://raw.githubusercontent.com/liamg/shox/master/scripts/install.sh" | bash
+curl -s "https://raw.githubusercontent.com/liamg/shox/master/scripts/install.sh" | sudo bash
 ```
+
+If you don't like to pipe to sudo - as well you shouldn't - you can remove the `sudo` above, but you'll have to add the shox dir to your `PATH` env var manually, as instructed by the installer.
 
 ## Configuration
 
