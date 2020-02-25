@@ -1,7 +1,7 @@
 #!/bin/bash
 BINARY=shox
 TAG=${TRAVIS_TAG:-development}
-GO111MODULE=on
+go mod download && go mod tidy
 mkdir -p bin/darwin
 GOOS=darwin GOARCH=amd64 go build -o bin/darwin/${BINARY}-darwin-amd64 ./cmd/shox/
 mkdir -p bin/linux
