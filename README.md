@@ -1,6 +1,8 @@
 # Shox: Terminal Status Bar
 
 [![Travis Build Status](https://travis-ci.org/liamg/shox.svg?branch=master)](https://travis-ci.org/liamg/shox)
+[![GoReportCard](https://goreportcard.com/badge/github.com/liamg/shox)](https://goreportcard.com/report/github.com/liamg/shox)
+[![Github Release](https://img.shields.io/github/release/liamg/shox.svg)](https://github.com/liamg/shox/releases)
 
 A customisable terminal status bar with universal shell/terminal compatibility. Currently works on Mac/Linux.
 
