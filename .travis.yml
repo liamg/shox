@@ -21,7 +21,6 @@ jobs:
         file:
           - bin/darwin/shox-darwin-amd64
           - bin/linux/shox-linux-amd64
-          - bin/windows/shox-windows-amd64.exe
         on:
           repo: liamg/shox
           tags: true
