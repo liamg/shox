@@ -6,6 +6,7 @@ import (
 
 type escapeSequenceHandler func(pty chan byte) (output []byte, discard []byte, redraw bool, err error)
 
+// ErrorCommandNotSupported means the command is not supported and should be parsed to the underlying terminal
 var ErrorCommandNotSupported = fmt.Errorf("command not supported")
 
 func (p *Proxy) proxyANSICommand(input chan byte) (output []byte, original []byte, requiredRedraw bool) {

@@ -16,11 +16,13 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
+// Terminal communicates with the underlying terminal which is running shox
 type Terminal struct {
 	shell string
 	proxy *proxy.Proxy
 }
 
+// NewTerminal creates a new terminal instance
 func NewTerminal() *Terminal {
 
 	shell := os.Getenv("SHELL")
@@ -34,14 +36,17 @@ func NewTerminal() *Terminal {
 	}
 }
 
+// SetShell sets the shell program being used by the terminal
 func (t *Terminal) SetShell(shell string) {
 	t.shell = shell
 }
 
+// AddDecorator adds a decorator to alter the terminal output
 func (t *Terminal) AddDecorator(d decorators.Decorator) {
 	t.proxy.AddDecorator(d)
 }
 
+// Run starts the terminal/shell proxying process
 func (t *Terminal) Run() error {
 
 	if os.Getenv("SHOX") != "" {

@@ -7,13 +7,16 @@ import (
 	"time"
 )
 
+// BashHelper runs a bash command and displays the output
 type BashHelper struct {
 }
 
+// UpdateInterval returns the minimum time period before the helper should run again
 func (h *BashHelper) UpdateInterval() time.Duration {
 	return time.Second * 5
 }
 
+// Run runs a bash command and displays the output
 func (h *BashHelper) Run(config string) string {
 	path, err := exec.LookPath("bash")
 	if err != nil {

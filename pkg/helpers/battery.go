@@ -7,13 +7,16 @@ import (
 	"github.com/distatus/battery"
 )
 
+// BatteryHelper shows the current battery charge level as a percentage
 type BatteryHelper struct {
 }
 
+// UpdateInterval returns the minimum time period before the helper should run again
 func (h *BatteryHelper) UpdateInterval() time.Duration {
 	return time.Minute
 }
 
+// Run returns the current battery charge level as a percentage
 func (h *BatteryHelper) Run(config string) string {
 
 	var current float64

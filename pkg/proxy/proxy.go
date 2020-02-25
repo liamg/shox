@@ -12,6 +12,7 @@ import (
 	"github.com/liamg/shox/pkg/decorators"
 )
 
+// Proxy sits between the terminal and the shell and adds decorators such as a status bar to the output
 type Proxy struct {
 	output                []byte
 	mutex                 sync.Mutex
@@ -28,6 +29,7 @@ type Proxy struct {
 	redrawChan            chan struct{}
 }
 
+// NewProxy creates a new proxy instance
 func NewProxy() *Proxy {
 	return &Proxy{
 		workChan:              make(chan byte, 0xffff),
@@ -38,6 +40,7 @@ func NewProxy() *Proxy {
 	}
 }
 
+// Start runs the proxy
 func (p *Proxy) Start() {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
@@ -48,14 +51,17 @@ func (p *Proxy) Start() {
 	p.started = true
 }
 
+// DisableRendering prevents the proxy from rendering it's decorators
 func (p *Proxy) DisableRendering() {
 	p.canRender = false
 }
 
+// EnableRendering allows the proxy to render it's decorators
 func (p *Proxy) EnableRendering() {
 	p.canRender = true
 }
 
+// Close shuts down the proxy
 func (p *Proxy) Close() {
 	p.closeOnce.Do(func() {
 		close(p.closeChan)
@@ -64,6 +70,7 @@ func (p *Proxy) Close() {
 	})
 }
 
+// Write writes data to the proxy, to be filtered
 func (p *Proxy) Write(data []byte) (n int, err error) {
 	if !p.started {
 		return 0, fmt.Errorf("proxy not started")
@@ -74,6 +81,7 @@ func (p *Proxy) Write(data []byte) (n int, err error) {
 	return len(data), nil
 }
 
+// Read reads data from the proxy, which has been filtered
 func (p *Proxy) Read(data []byte) (n int, err error) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
@@ -88,6 +96,7 @@ func (p *Proxy) Read(data []byte) (n int, err error) {
 	return n, nil
 }
 
+// HandleCoordinates converts coordinates received from the shell to those with an area for decorators reserved
 func (p *Proxy) HandleCoordinates(row, col uint16) (outRow uint16, outCol uint16) {
 
 	p.decMutex.Lock()
@@ -127,6 +136,7 @@ func (p *Proxy) HandleResize(rows, cols uint16) (outRows uint16, outCols uint16)
 	return rows, cols
 }
 
+// AddDecorator adds a decorator, such as a status bar, to the proxy
 func (p *Proxy) AddDecorator(d decorators.Decorator) {
 	p.decMutex.Lock()
 	defer p.decMutex.Unlock()

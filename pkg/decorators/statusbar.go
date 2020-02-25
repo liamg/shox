@@ -13,6 +13,7 @@ import (
 
 var helperRegex = regexp.MustCompile(`{[^}]+}`)
 
+// StatusBar is a full width bar containing useful info which can be added to the terminal using a proxy
 type StatusBar struct {
 	anchor  Anchor
 	format  string
@@ -21,6 +22,7 @@ type StatusBar struct {
 	padding uint16
 }
 
+// NewStatusBar creates a new status bar instance
 func NewStatusBar() *StatusBar {
 	return &StatusBar{
 		anchor:  AnchorTop,
@@ -31,18 +33,22 @@ func NewStatusBar() *StatusBar {
 	}
 }
 
+// SetFormat controls the output format of the status bar
 func (b *StatusBar) SetFormat(format string) {
 	b.format = format
 }
 
+// SetBg sets the background colour of the status bar
 func (b *StatusBar) SetBg(colour ansi.Colour) {
 	b.bg = colour.Bg()
 }
 
+// SetFg sets the background colour of the status bar
 func (b *StatusBar) SetFg(colour ansi.Colour) {
 	b.fg = colour.Fg()
 }
 
+// Draw renders the decorator to StdOut
 func (b *StatusBar) Draw(rows uint16, cols uint16) {
 
 	var row, col uint16
@@ -88,6 +94,21 @@ func (b *StatusBar) Draw(rows uint16, cols uint16) {
 	ansi.RestoreCursorPosition()
 }
 
+// SetPadding sets a vertical padding on the status bar
+func (b *StatusBar) SetPadding(pad uint16) {
+	b.padding = pad
+}
+
+// GetAnchor returns the anchor e.g. Top/Bottom
+func (b *StatusBar) GetAnchor() Anchor {
+	return b.anchor
+}
+
+// GetHeight returns the height of the decorator in terminal character rows
+func (b *StatusBar) GetHeight() (rows uint16) {
+	return b.padding + 1
+}
+
 func padLeft(input string, totalLen int) string {
 	pad := totalLen - runewidth.StringWidth(input) // utf8.RuneCountInString(input)
 	if pad > 0 {
@@ -122,16 +143,4 @@ func (b *StatusBar) applyHelpers(segment string) string {
 		formatted = strings.Replace(formatted, pattern, output, 1)
 	}
 	return formatted
-}
-
-func (b *StatusBar) SetPadding(pad uint16) {
-	b.padding = pad
-}
-
-func (b *StatusBar) GetAnchor() Anchor {
-	return b.anchor
-}
-
-func (b *StatusBar) GetHeight() (rows uint16) {
-	return b.padding + 1
 }

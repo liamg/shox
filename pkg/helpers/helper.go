@@ -7,13 +7,14 @@ import (
 )
 
 type Helper interface {
-	Run(config string) string
-	UpdateInterval() time.Duration
+	Run(config string) string      // Run starts the helper and returns the output
+	UpdateInterval() time.Duration // UpdateInterval returns the minimum time period before the helper should run again
 }
 
 var regLock sync.Mutex
 var registry = map[string]Helper{}
 
+// Register registers a new helper by name
 func Register(name string, helper Helper) {
 	regLock.Lock()
 	defer regLock.Unlock()
@@ -23,6 +24,7 @@ func Register(name string, helper Helper) {
 	registry[name] = helper
 }
 
+// ErrHelperNotFound means no helper exists by the specified name
 var ErrHelperNotFound = fmt.Errorf("helper not found")
 
 var cacheLock sync.Mutex
@@ -33,6 +35,7 @@ type helperRun struct {
 	runTime time.Time
 }
 
+// Run executes a helper with the provided config string
 func Run(name, config string) (string, error) {
 	regLock.Lock()
 	defer regLock.Unlock()

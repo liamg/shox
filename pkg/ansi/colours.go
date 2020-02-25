@@ -2,6 +2,7 @@ package ansi
 
 import "fmt"
 
+// Colour represents an ANSI colour
 type Colour uint8
 
 const (
@@ -26,14 +27,17 @@ const (
 	ColourWhite
 )
 
+// Fg converts the colour to an ANSI foreground SGR code
 func (c Colour) Fg() Colour {
 	return c
 }
 
+// Bg converts the colour to an ANSI background SGR code
 func (c Colour) Bg() Colour {
 	return c + 10
 }
 
+// ColourFromString creates an ANSI colour code from a name string e.g. "red"
 func ColourFromString(c string) (Colour, error) {
 	switch c {
 	case "black":
