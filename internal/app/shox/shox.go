@@ -44,6 +44,5 @@ func Run() error {
 		bar.SetPadding(config.Bar.Padding)
 	}
 
-	term.Run()
-	return nil
+	return term.Run()
 }

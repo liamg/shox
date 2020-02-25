@@ -60,7 +60,7 @@ func (t *Terminal) Run() error {
 	// Start the command with a pty.
 	ptmx, err := pty.Start(c)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	// Make sure to close the pty at the end.
 	defer func() { _ = ptmx.Close() }() // Best effort.
@@ -97,11 +97,9 @@ func (t *Terminal) Run() error {
 	defer func() { _ = terminal.Restore(int(os.Stdin.Fd()), oldState) }() // Best effort.
 
 	// Copy stdin to the pty and the pty to stdout.
-	go func() { _, _ = io.Copy(ptmx, os.Stdin); fmt.Println("Finished read from stdin") }()
-	go func() {
-		_, _ = io.Copy(os.Stdout, t.proxy)
-		fmt.Println("Finished read from proxy")
-	}()
+	go func() { _, _ = io.Copy(ptmx, os.Stdin) }()
+	go func() { _, _ = io.Copy(os.Stdout, t.proxy) }()
 	_, _ = io.Copy(t.proxy, ptmx)
 	fmt.Printf("\r\n")
+	return nil
 }
