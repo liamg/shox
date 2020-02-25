@@ -54,6 +54,7 @@ Helpers create dynamic output in your status bar. You can use one by adding it t
 | cpu     | Show current CPU usage        | {cpu}          | 20%            |
 | memory  | Show current memory usage %   | {memory}       | 20%            |
 | battery | Show current battery charge % | {battery}      | 20%            |
+| bash    | Run a custom bash command     | {bash:echo hi} | hi
 
 ## Why?
 
