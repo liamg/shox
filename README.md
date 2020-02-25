@@ -8,7 +8,7 @@ A customisable terminal status bar with universal shell/terminal compatibility.
 
 ## Installation
 
-*NOTE* This is still very experimental. I'm using it locally without any problems right now, but there's still a lot of testing and tweaking to do. Feel free to try it out, but get ready for some potential bugginess!
+**NOTE** This is still very experimental. I'm using it locally without any problems right now, but there's still a lot of testing and tweaking to do. Feel free to try it out, but get ready for some potential bugginess!
 
 ```bash
 curl -s "https://raw.githubusercontent.com/liamg/shox/master/scripts/install.sh" | bash
