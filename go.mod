@@ -7,6 +7,7 @@ require (
 	github.com/creack/pty v1.1.9
 	github.com/distatus/battery v0.10.0
 	github.com/go-ole/go-ole v1.2.4 // indirect
+	github.com/mattn/go-runewidth v0.0.8
 	github.com/shirou/gopsutil v2.20.1+incompatible
 	github.com/stretchr/testify v1.5.1 // indirect
 	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d

@@ -3,10 +3,10 @@ package decorators
 import (
 	"fmt"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/liamg/shox/pkg/helpers"
+	"github.com/mattn/go-runewidth"
 
 	"github.com/liamg/shox/pkg/ansi"
 )
@@ -67,15 +67,14 @@ func (b *StatusBar) Draw(rows uint16, cols uint16) {
 		}
 		switch i {
 		case 0: // left align
-			output = fmt.Sprintf("%-"+strconv.Itoa(colSize)+"v", output)
+			output = padRight(output, colSize)
 		case 1: // centre
 			padSize := colSize + midExtra
 			leftPad := padSize / 2
-			rightPad := padSize
-			output = fmt.Sprintf("%"+strconv.Itoa(leftPad)+"v", output)
-			output = fmt.Sprintf("%-"+strconv.Itoa(rightPad)+"v", output)
+			output = padLeft(output, leftPad)
+			output = padRight(output, padSize)
 		case 2: // right align
-			output = fmt.Sprintf("%"+strconv.Itoa(colSize)+"v", output)
+			output = padLeft(output, colSize)
 		}
 
 		fmt.Printf("%s", output)
@@ -87,6 +86,22 @@ func (b *StatusBar) Draw(rows uint16, cols uint16) {
 	}
 
 	ansi.RestoreCursorPosition()
+}
+
+func padLeft(input string, totalLen int) string {
+	pad := totalLen - runewidth.StringWidth(input) // utf8.RuneCountInString(input)
+	if pad > 0 {
+		input = strings.Repeat(" ", pad) + input
+	}
+	return input
+}
+
+func padRight(input string, totalLen int) string {
+	pad := totalLen - runewidth.StringWidth(input) // utf8.RuneCountInString(input)
+	if pad > 0 {
+		input += strings.Repeat(" ", pad)
+	}
+	return input
 }
 
 func (b *StatusBar) applyHelpers(segment string) string {
