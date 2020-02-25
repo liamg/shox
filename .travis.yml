@@ -1,0 +1,27 @@
+language: go
+go:
+  - 1.13
+env:
+  global:
+    - secure: "Dt3r/KmtMvFrmk18bHL0MnixEYRO09XE3UK+2qPoj1UScZqd9f+5cN/mmOyhGNJhvnNM8BGBelD9+8eaz6rMGHDnpSHAIstsMEjqZ0SYRADbGyXcHCFQT968x0sJEV385Eo2+9cI4s9fC2+r4YInoEjsGTKz/DKZah2mA49/5cNDyoPgyINLbgId10LYUUsvXc74MbvpPPIrGA2/fVjVuv/9M5QnDd5mQKBXPEWFkiPrpGHGFQOvqd1XpYSws2T5H3aRQN3kq8bROBaCzACm0shj2+pRn0B0ukbwRKhN1s2mKkE0HMmo3CCwp8CXpjlS4/IdJlMkfSGYRnlwS8BdHk2k5xb+PI9x7iIzhYDOYqEcHAIIgX2+o49XeS1Dt5AJMdqIq4gvFXbLc/JzXus8LpYrNxfnKfh5qyGfX3zKuZSfPBwvLlu9NQpmqGeyCogyqxcioPkebnsChbuH/0z1pgnx62W6fV58WYbCL8KEtFpK1VbwMYjy0210DZNhpOguoCLrR7CNG73DppNpxInXNfGZKt5bxjIYc5HDKEPfAUKV3MLj2ls+Q8mZBeQqFWiC5qby+wM3b6ooyDWErmJAUZtUa+Z9wJHHkxh2ocp+yoCOjX/qPkiwrN7IO9aF9K2s1Y7Yne0dzWf/a+rRwAY8/T5ulD32FSwNcGsw6fgEuRE="
+jobs:
+  include:
+    - stage: test
+      name: Run tests
+      script:
+        - make test
+    - stage: build
+      script:
+        - make build
+      deploy:
+        provider: releases
+        skip_cleanup: true
+        name: "Shox $TRAVIS_TAG"
+        edge: true
+        file:
+          - bin/darwin/shox-darwin-amd64
+          - bin/linux/shox-linux-amd64
+          - bin/windows/shox-windows-amd64.exe
+        on:
+          repo: liamg/shox
+          tags: true

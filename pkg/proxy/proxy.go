@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/liamg/shox/internal/pkg/ansi"
+	"github.com/liamg/shox/pkg/ansi"
 
-	"github.com/liamg/shox/internal/pkg/decorators"
+	"github.com/liamg/shox/pkg/decorators"
 )
 
 type Proxy struct {
@@ -138,16 +138,23 @@ func (p *Proxy) process() {
 	p.requestRedraw()
 
 	tickDuration := time.Millisecond * 10
-	timer := time.NewTimer(tickDuration)
-	defer timer.Stop()
+	ticker := time.NewTicker(tickDuration)
+	defer ticker.Stop()
+
+	renderInterval := time.Second
+
+	lastRender := time.Now()
 
 	for {
 		select {
 		case b := <-p.workChan:
 			if b == 0x1b {
-				discard, redraw, err := p.proxyANSICommand(p.workChan)
-				if err != nil {
-					p.writeOutput(append([]byte{b}, discard...))
+				output, original, redraw := p.proxyANSICommand(p.workChan)
+				if original != nil {
+					p.writeOutput(append([]byte{b}, original...))
+				}
+				if output != nil {
+					p.writeOutput(append([]byte{b}, output...))
 				}
 
 				// can requestRedraw even if command errored, as we may not support a command but still want to requestRedraw
@@ -161,12 +168,16 @@ func (p *Proxy) process() {
 			} else {
 				p.writeOutput([]byte{b})
 			}
-			timer.Reset(tickDuration)
-		case <-timer.C:
+		case <-ticker.C:
 			select {
 			case <-p.redrawChan:
 				p.redraw()
+				lastRender = time.Now()
 			default:
+				if time.Since(lastRender) >= renderInterval {
+					p.redraw()
+					lastRender = time.Now()
+				}
 			}
 		case <-p.closeChan:
 			close(p.processCompletionChan)

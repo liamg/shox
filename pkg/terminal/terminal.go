@@ -8,9 +8,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/liamg/shox/internal/pkg/decorators"
+	"github.com/liamg/shox/pkg/decorators"
 
-	"github.com/liamg/shox/internal/pkg/proxy"
+	"github.com/liamg/shox/pkg/proxy"
 
 	"github.com/creack/pty"
 	"golang.org/x/crypto/ssh/terminal"
@@ -46,6 +46,7 @@ func (t *Terminal) Run() {
 
 	t.proxy.Start()
 	defer t.proxy.Close()
+	t.proxy.Write([]byte("\033c")) // reset term
 
 	// Create arbitrary command.
 	c := exec.Command(t.shell)

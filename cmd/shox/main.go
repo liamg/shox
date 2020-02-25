@@ -1,16 +1,15 @@
 package main
 
 import (
-	"github.com/liamg/shox/internal/pkg/decorators"
-	"github.com/liamg/shox/internal/pkg/terminal"
+	"fmt"
+	"os"
+
+	"github.com/liamg/shox/internal/app/shox"
 )
 
 func main() {
-	t := terminal.NewTerminal()
-
-	bar := decorators.NewSimpleBar()
-
-	t.AddDecorator(bar)
-
-	t.Run()
+	if err := shox.Run(); err != nil {
+		_, _ = fmt.Fprintln(os.Stderr, "Failed to parse config file: %s", err)
+		os.Exit(1)
+	}
 }
