@@ -8,17 +8,17 @@ import (
 
 type csiHandler func(params []string, intermediate string) (output []byte, redraw bool, err error)
 
-func (proxy *Proxy) handleCSI(pty chan byte) (output []byte, original []byte, redraw bool, err error) {
+func (p *Proxy) handleCSI(pty chan byte) (output []byte, original []byte, redraw bool, err error) {
 
 	var csiSequences = map[byte]csiHandler{
-		'd': proxy.csiLinePositionAbsolute,
-		'f': proxy.csiCursorPositionHandler,
-		'n': proxy.csiDeviceStatusReportHandler,
-		'G': proxy.csiCursorCharacterAbsoluteHandler,
-		'H': proxy.csiCursorPositionHandler,
-		'h': proxy.csiSetModeHandler,
-		'l': proxy.csiResetModeHandler,
-		'J': proxy.csiEraseInDisplayHandler,
+		'd': p.csiLinePositionAbsolute,
+		'f': p.csiCursorPositionHandler,
+		'n': p.csiDeviceStatusReportHandler,
+		'G': p.csiCursorCharacterAbsoluteHandler,
+		'H': p.csiCursorPositionHandler,
+		'h': p.csiSetModeHandler,
+		'l': p.csiResetModeHandler,
+		'J': p.csiEraseInDisplayHandler,
 	}
 
 	var final byte
@@ -57,9 +57,9 @@ CSI:
 	return output, nil, redraw, nil
 }
 
-func (proxy *Proxy) csiDeviceStatusReportHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
+func (p *Proxy) csiDeviceStatusReportHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
 
-	if !proxy.canRender {
+	if !p.canRender {
 		return nil, false, ErrorCommandNotSupported
 	}
 
@@ -71,9 +71,9 @@ func (proxy *Proxy) csiDeviceStatusReportHandler(params []string, intermediate s
 	return nil, false, ErrorCommandNotSupported
 }
 
-func (proxy *Proxy) csiCursorCharacterAbsoluteHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
+func (p *Proxy) csiCursorCharacterAbsoluteHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
 
-	if !proxy.canRender {
+	if !p.canRender {
 		return nil, false, ErrorCommandNotSupported
 	}
 
@@ -86,13 +86,13 @@ func (proxy *Proxy) csiCursorCharacterAbsoluteHandler(params []string, intermedi
 		}
 	}
 
-	_, adjustedCol := proxy.HandleCoordinates(0, uint16(col))
+	_, adjustedCol := p.HandleCoordinates(0, uint16(col))
 	return []byte(fmt.Sprintf("\033[%dG", adjustedCol)), false, nil
 }
 
-func (proxy *Proxy) csiCursorPositionHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
+func (p *Proxy) csiCursorPositionHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
 
-	if !proxy.canRender {
+	if !p.canRender {
 		return nil, false, ErrorCommandNotSupported
 	}
 
@@ -113,13 +113,13 @@ func (proxy *Proxy) csiCursorPositionHandler(params []string, intermediate strin
 		}
 	}
 
-	row, col := proxy.HandleCoordinates(uint16(y), uint16(x))
+	row, col := p.HandleCoordinates(uint16(y), uint16(x))
 	return []byte(fmt.Sprintf("\033[%d;%dH", row, col)), false, nil
 }
 
-func (proxy *Proxy) csiLinePositionAbsolute(params []string, intermediate string) (output []byte, redraw bool, err error) {
+func (p *Proxy) csiLinePositionAbsolute(params []string, intermediate string) (output []byte, redraw bool, err error) {
 
-	if !proxy.canRender {
+	if !p.canRender {
 		return nil, false, ErrorCommandNotSupported
 	}
 
@@ -132,14 +132,14 @@ func (proxy *Proxy) csiLinePositionAbsolute(params []string, intermediate string
 		}
 	}
 
-	newRow, _ := proxy.HandleCoordinates(uint16(row), 0)
+	newRow, _ := p.HandleCoordinates(uint16(row), 0)
 	return []byte(fmt.Sprintf("\033[%dd", newRow)), false, nil
 }
 
 // CSI Ps J
-func (proxy *Proxy) csiEraseInDisplayHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
+func (p *Proxy) csiEraseInDisplayHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
 
-	if !proxy.canRender {
+	if !p.canRender {
 		return nil, false, ErrorCommandNotSupported
 	}
 
@@ -150,19 +150,19 @@ func (proxy *Proxy) csiEraseInDisplayHandler(params []string, intermediate strin
 
 	switch n {
 	case "2", "3":
-		row, col := proxy.HandleCoordinates(0, 0)
+		row, col := p.HandleCoordinates(0, 0)
 		return []byte(fmt.Sprintf("\033[%d;%dH", row, col)), true, ErrorCommandNotSupported
 	}
 
 	return nil, false, ErrorCommandNotSupported
 }
 
-func (proxy *Proxy) csiResetModeHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
-	return proxy.csiSetModes(params, false)
+func (p *Proxy) csiResetModeHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
+	return p.csiSetModes(params, false)
 }
 
-func (proxy *Proxy) csiSetModeHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
-	return proxy.csiSetModes(params, true)
+func (p *Proxy) csiSetModeHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
+	return p.csiSetModes(params, true)
 }
 
 func (p *Proxy) csiSetModes(modes []string, enabled bool) (output []byte, redraw bool, err error) {

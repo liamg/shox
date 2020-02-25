@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// Helper is a dynamic operation which creates output for the status bar
 type Helper interface {
 	Run(config string) string      // Run starts the helper and returns the output
 	UpdateInterval() time.Duration // UpdateInterval returns the minimum time period before the helper should run again

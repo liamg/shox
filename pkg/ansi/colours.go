@@ -6,24 +6,40 @@ import "fmt"
 type Colour uint8
 
 const (
+	// ColourBlack is black
 	ColourBlack Colour = iota + 30
+	// ColourRed is the colour red
 	ColourRed
+	// ColourGreen is the colour green
 	ColourGreen
+	// ColourYellow is the colour yellow
 	ColourYellow
+	// ColourBlue is the colour blue
 	ColourBlue
+	// ColourMagenta is the colour magenta
 	ColourMagenta
+	// ColourCyan is the colour cyan
 	ColourCyan
+	// ColourLightGrey is the colour grey
 	ColourLightGrey
 )
 
 const (
+	// ColourDarkGrey is the colour dark grey
 	ColourDarkGrey Colour = iota + 90
+	// ColourLightRed is the colour light red
 	ColourLightRed
+	// ColourLightGreen is the colour light green
 	ColourLightGreen
+	// ColourLightYellow is the colour light yellow
 	ColourLightYellow
+	// ColourLightBlue is the colour light blue
 	ColourLightBlue
+	// ColourLightMagenta is the colour light magenta
 	ColourLightMagenta
+	// ColourLightCyan is the colour light cyan
 	ColourLightCyan
+	// ColourWhite is the colour white
 	ColourWhite
 )
 

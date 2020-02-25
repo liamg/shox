@@ -11,6 +11,7 @@ import (
 	"github.com/liamg/shox/pkg/terminal"
 )
 
+// Run starts the shox application
 func Run() error {
 
 	term := terminal.NewTerminal()
@@ -23,7 +24,7 @@ func Run() error {
 		term.SetShell(shell)
 	}
 
-	config, err := LoadConfig()
+	config, err := loadConfig()
 	if err != nil {
 		return fmt.Errorf("failed to load config file: %s", err)
 	}

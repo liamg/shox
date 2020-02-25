@@ -4,8 +4,10 @@ package decorators
 type Anchor uint8
 
 const (
-	AnchorTop    Anchor = iota //AnchorTop renders at the top of the terminal
-	AnchorBottom               //AnchorBottom renders at the bottom of the terminal
+	// AnchorTop renders at the top of the terminal
+	AnchorTop Anchor = iota
+	// AnchorBottom renders at the bottom of the terminal
+	AnchorBottom
 )
 
 // Decorator is an entity which modifies the terminal output in a desirable way

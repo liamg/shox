@@ -10,7 +10,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type Config struct {
+type config struct {
 	Shell string `yaml:"shell"`
 	Bar   struct {
 		Format  string `yaml:"format"`
@@ -22,7 +22,7 @@ type Config struct {
 	} `yaml:"bar"`
 }
 
-func LoadConfig() (*Config, error) {
+func loadConfig() (*config, error) {
 
 	usr, err := user.Current()
 	if err != nil {
@@ -46,9 +46,12 @@ func LoadConfig() (*Config, error) {
 
 	for _, place := range places {
 		if data, err := ioutil.ReadFile(place); err == nil {
-			config := Config{}
+			config := config{}
 			err := yaml.Unmarshal([]byte(data), &config)
-			return &config, err
+			if err != nil {
+				return nil, fmt.Errorf("failed to parse config file: %s", err)
+			}
+			return &config, nil
 		}
 	}
 
