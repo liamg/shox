@@ -54,15 +54,25 @@ The following colours are available: `black`, `white`, `red`, `green`, `yellow`,
 
 Helpers create dynamic output in your status bar. You can use one by adding it to your bar format config. The following is a list of available helpers.
 
-| Helper  | Description                   | Example Config | Example Output |
-|---------|-------------------------------|----------------|----------------|
-| time    | Show current time             | {time}         | 11:58:17       |
-| cpu     | Show current CPU usage        | {cpu}          | 20%            |
-| memory  | Show current memory usage %   | {memory}       | 20%            |
-| battery | Show current battery charge % | {battery}      | 20%            |
-| bash    | Run a custom bash command     | {bash:echo hi} | hi
+| Helper  | Description                                       | Example Config   | Example Output |
+|---------|---------------------------------------------------|------------------|----------------|
+| time    | Show current time                                 | {time}           | 11:58:17       |
+| cpu     | Show current CPU usage                            | {cpu}            | 20%            |
+| memory  | Show current memory usage %                       | {memory}         | 20%            |
+| battery | Show current battery charge %                     | {battery}        | 20%            |
+| bash    | Run a custom bash command                         | {bash:echo hi}   | hi             |
+| weather | Show current weather (provided by http://wttr.in) | {weather:1}      | 🌧 +6°C         |
 
 Ideally this list would be much longer - please feel free to PR more helpers! You can see simple examples [here](https://github.com/liamg/shox/tree/master/pkg/helpers).
+
+##### Weather
+
+The configuration section of the weather helper holds the display format.
+For all available display formats please visit
+[chubin/wttr.in#one-line-output](https://github.com/chubin/wttr.in#one-line-output)
+The default value is `1` which only shows the weather
+
+> **_NOTE:_** You don't need to URL-encode the weather format, i.e. use `%l: %c %t` instead of `%l:+%c+%t`
 
 ## Why?
 
