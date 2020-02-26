@@ -19,6 +19,7 @@ import (
 // Terminal communicates with the underlying terminal which is running shox
 type Terminal struct {
 	shell         string
+	dir           string
 	proxy         *proxy.Proxy
 	pty           *os.File
 	enableNesting bool
@@ -41,6 +42,11 @@ func NewTerminal() *Terminal {
 // SetShell sets the shell program being used by the terminal
 func (t *Terminal) SetShell(shell string) {
 	t.shell = shell
+}
+
+// SetDir sets the directory the shell will start in (CWD)
+func (t *Terminal) SetDir(dir string) {
+	t.dir = dir
 }
 
 // AddDecorator adds a decorator to alter the terminal output
@@ -74,6 +80,10 @@ func (t *Terminal) Run() error {
 
 	// Create arbitrary command.
 	c := exec.Command(t.shell)
+
+	if t.dir != "" {
+		c.Dir = t.dir
+	}
 
 	// Start the command with a pty.
 	var err error
