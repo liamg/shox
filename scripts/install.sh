@@ -5,6 +5,7 @@ set -e
 echo "Determining platform..."
 platform=$(uname | tr '[:upper:]' '[:lower:]')
 echo "Finding latest release..."
+which jq >/dev/null 2>&1 || { echo "jq not found so you'll need to install it in a way suitable for your operating system. See https://stedolan.github.io/jq/ for details" >&2; exit 1; }
 asset=$(curl --silent https://api.github.com/repos/liamg/shox/releases/latest | jq -r ".assets[] | select(.name | contains(\"${platform}\")) | .url")
 echo "Downloading latest release for your platform..."
 curl -s -L -H "Accept: application/octet-stream" "${asset}" --output ./shox
