@@ -20,6 +20,7 @@ import (
 type Terminal struct {
 	shell string
 	proxy *proxy.Proxy
+	pty   *os.File
 }
 
 // NewTerminal creates a new terminal instance
@@ -46,6 +47,11 @@ func (t *Terminal) AddDecorator(d decorators.Decorator) {
 	t.proxy.AddDecorator(d)
 }
 
+// Pty exposes the underlying terminal pty, if it exists
+func (t *Terminal) Pty() *os.File {
+	return t.pty
+}
+
 // Run starts the terminal/shell proxying process
 func (t *Terminal) Run() error {
 
@@ -63,12 +69,13 @@ func (t *Terminal) Run() error {
 	c := exec.Command(t.shell)
 
 	// Start the command with a pty.
-	ptmx, err := pty.Start(c)
+	var err error
+	t.pty, err = pty.Start(c)
 	if err != nil {
 		return err
 	}
 	// Make sure to close the pty at the end.
-	defer func() { _ = ptmx.Close() }() // Best effort.
+	defer func() { _ = t.pty.Close() }() // Best effort.
 
 	// Handle pty size.
 	ch := make(chan os.Signal, 1)
@@ -85,7 +92,7 @@ func (t *Terminal) Run() error {
 			size.Rows = rows
 			size.Cols = cols
 
-			if err := pty.Setsize(ptmx, size); err != nil {
+			if err := pty.Setsize(t.pty, size); err != nil {
 				continue
 			}
 
@@ -102,9 +109,9 @@ func (t *Terminal) Run() error {
 	defer func() { _ = terminal.Restore(int(os.Stdin.Fd()), oldState) }() // Best effort.
 
 	// Copy stdin to the pty and the pty to stdout.
-	go func() { _, _ = io.Copy(ptmx, os.Stdin) }()
+	go func() { _, _ = io.Copy(t.pty, os.Stdin) }()
 	go func() { _, _ = io.Copy(os.Stdout, t.proxy) }()
-	_, _ = io.Copy(t.proxy, ptmx)
+	_, _ = io.Copy(t.proxy, t.pty)
 	fmt.Printf("\r\n")
 	return nil
 }
