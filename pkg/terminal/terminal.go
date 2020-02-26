@@ -18,9 +18,10 @@ import (
 
 // Terminal communicates with the underlying terminal which is running shox
 type Terminal struct {
-	shell string
-	proxy *proxy.Proxy
-	pty   *os.File
+	shell         string
+	proxy         *proxy.Proxy
+	pty           *os.File
+	enableNesting bool
 }
 
 // NewTerminal creates a new terminal instance
@@ -52,14 +53,20 @@ func (t *Terminal) Pty() *os.File {
 	return t.pty
 }
 
+// SetNestingAllowed sets whether multiple shox bars can be nested inside each other
+func (t *Terminal) SetNestingAllowed(allowed bool) {
+	t.enableNesting = allowed
+}
+
 // Run starts the terminal/shell proxying process
 func (t *Terminal) Run() error {
 
-	if os.Getenv("SHOX") != "" {
-		return fmt.Errorf("shox is already running in this terminal")
+	if !t.enableNesting {
+		if os.Getenv("SHOX") != "" {
+			return fmt.Errorf("shox is already running in this terminal")
+		}
+		_ = os.Setenv("SHOX", "1")
 	}
-
-	_ = os.Setenv("SHOX", "1")
 
 	t.proxy.Start()
 	defer t.proxy.Close()
