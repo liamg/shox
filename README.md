@@ -74,6 +74,22 @@ The default value is `1` which only shows the weather
 
 > **_NOTE:_** You don't need to URL-encode the weather format, i.e. use `%l: %c %t` instead of `%l:+%c+%t`
 
+## Uninstallation
+
+### If installed with `sudo`
+Remove the binary from `/usr/local/bin`
+```bash
+rm /usr/local/bin/shox
+```
+
+### If installed without `sudo`
+Remove the binary from the shox installation dir `$HOME/bin`
+```bash
+rm $HOME/bin/shox
+```
+
+> **_NOTE:_** Don't forget to remove any configuration files you've created should you decide you don't need them
+
 ## Why?
 
 I frequently needed a way to have a quick overview of several things without cramming them into my PS1, and to update those things dynamicly.
