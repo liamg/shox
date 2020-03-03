@@ -2,7 +2,6 @@ package terminal
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -126,9 +125,9 @@ func (t *Terminal) Run() error {
 	defer func() { _ = terminal.Restore(int(os.Stdin.Fd()), oldState) }() // Best effort.
 
 	// Copy stdin to the pty and the pty to stdout.
-	go func() { _, _ = io.Copy(t.pty, os.Stdin) }()
-	go func() { _, _ = io.Copy(os.Stdout, t.proxy) }()
-	_, _ = io.Copy(t.proxy, t.pty)
+	go func() {  _ = lazyCopy(t.pty, os.Stdin) }()
+	go func() {  _ = lazyCopy(os.Stdout, t.proxy) }()
+	_ = lazyCopy(t.proxy, t.pty)
 	fmt.Printf("\r\n")
 	return nil
 }
