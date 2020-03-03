@@ -54,14 +54,16 @@ The following colours are available: `black`, `white`, `red`, `green`, `yellow`,
 
 Helpers create dynamic output in your status bar. You can use one by adding it to your bar format config. The following is a list of available helpers.
 
-| Helper  | Description                                       | Example Config   | Example Output |
-|---------|---------------------------------------------------|------------------|----------------|
-| time    | Show current time                                 | {time}           | 11:58:17       |
-| cpu     | Show current CPU usage                            | {cpu}            | 20%            |
-| memory  | Show current memory usage %                       | {memory}         | 20%            |
-| battery | Show current battery charge %                     | {battery}        | 20%            |
-| bash    | Run a custom bash command                         | {bash:echo hi}   | hi             |
-| weather | Show current weather (provided by http://wttr.in) | {weather:1}      | 🌧 +6°C         |
+| Helper  | Description                                       | Example Config     | Example Output |
+|---------|---------------------------------------------------|--------------------|----------------|
+| time    | Show current time                                 | {time}             | 11:58:17       |
+| cpu     | Show current CPU usage                            | {cpu}              | 20%            |
+| memory  | Show current memory usage %                       | {memory}           | 20%            |
+| battery | Show current battery charge %                     | {battery}          | 20%            |
+| bash    | Run a custom bash command                         | {bash:echo hi}     | hi             |
+| weather | Show current weather (provided by http://wttr.in) | {weather:1}        | 🌧 +6°C         |
+| until   | Show time remaining until a given unix timestamp  | {until:1583255109} | 13m26s         |
+
 
 Ideally this list would be much longer - please feel free to PR more helpers! You can see simple examples [here](https://github.com/liamg/shox/tree/master/pkg/helpers).
 
