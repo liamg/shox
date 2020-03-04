@@ -20,6 +20,7 @@ type StatusBar struct {
 	bg      ansi.Colour
 	fg      ansi.Colour
 	padding uint16
+	visible bool
 }
 
 // NewStatusBar creates a new status bar instance
@@ -30,7 +31,16 @@ func NewStatusBar() *StatusBar {
 		bg:      ansi.ColourRed.Bg(),
 		fg:      ansi.ColourWhite.Fg(),
 		padding: 0,
+		visible: true,
 	}
+}
+
+func (b *StatusBar) IsVisible() bool {
+	return b.visible
+}
+
+func (b *StatusBar) SetVisible(visible bool) {
+	b.visible = visible
 }
 
 // SetFormat controls the output format of the status bar

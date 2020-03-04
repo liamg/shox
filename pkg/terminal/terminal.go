@@ -63,6 +63,10 @@ func (t *Terminal) SetNestingAllowed(allowed bool) {
 	t.enableNesting = allowed
 }
 
+func (t *Terminal) ForceRedraw() {
+	t.proxy.ForceRedraw()
+}
+
 // Run starts the terminal/shell proxying process
 func (t *Terminal) Run() error {
 
@@ -125,8 +129,8 @@ func (t *Terminal) Run() error {
 	defer func() { _ = terminal.Restore(int(os.Stdin.Fd()), oldState) }() // Best effort.
 
 	// Copy stdin to the pty and the pty to stdout.
-	go func() {  _ = lazyCopy(t.pty, os.Stdin) }()
-	go func() {  _ = lazyCopy(os.Stdout, t.proxy) }()
+	go func() { _ = lazyCopy(t.pty, os.Stdin) }()
+	go func() { _ = lazyCopy(os.Stdout, t.proxy) }()
 	_ = lazyCopy(t.proxy, t.pty)
 	fmt.Printf("\r\n")
 	return nil

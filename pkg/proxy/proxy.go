@@ -103,6 +103,9 @@ func (p *Proxy) HandleCoordinates(row, col uint16) (outRow uint16, outCol uint16
 	defer p.decMutex.Unlock()
 
 	for _, dec := range p.decorators {
+		if !dec.IsVisible() {
+			continue
+		}
 		rows := dec.GetHeight()
 		switch dec.GetAnchor() {
 		case decorators.AnchorTop:
@@ -123,6 +126,9 @@ func (p *Proxy) HandleResize(rows, cols uint16) (outRows uint16, outCols uint16)
 	p.realCols = cols
 
 	for _, dec := range p.decorators {
+		if !dec.IsVisible() {
+			continue
+		}
 		h := dec.GetHeight()
 
 		if h >= rows {
@@ -199,6 +205,10 @@ func (p *Proxy) process() {
 
 }
 
+func (p *Proxy) ForceRedraw() {
+	p.redraw()
+}
+
 func (p *Proxy) requestRedraw() {
 	select {
 	case p.redrawChan <- struct{}{}:
@@ -213,6 +223,9 @@ func (p *Proxy) redraw() {
 		return
 	}
 	for _, decorator := range p.decorators {
+		if !decorator.IsVisible() {
+			continue
+		}
 		decorator.Draw(p.realRows, p.realCols)
 	}
 }
