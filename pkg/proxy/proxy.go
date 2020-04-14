@@ -170,7 +170,7 @@ func (p *Proxy) process() {
 					p.writeOutput(append([]byte{b}, original...))
 				}
 				if output != nil {
-					p.writeOutput(append(output...))
+					p.writeOutput(output...)
 				}
 
 				// can requestRedraw even if command errored, as we may not support a command but still want to requestRedraw
