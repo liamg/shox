@@ -133,7 +133,7 @@ func (t *Terminal) Run() error {
 
 	// Copy stdin to the pty and the pty to stdout.
 	go func() { _ = lazyCopy(t.pty, os.Stdin) }()
-	go func() { _ = lazyCopy(os.Stdout, t.proxy, t.canOutput) }()
+	go func() { _ = lazyCopy(os.Stdout, t.proxy, t.hideAllOutput) }()
 	_ = lazyCopy(t.proxy, t.pty)
 	fmt.Printf("\r\n")
 	return nil
@@ -151,8 +151,8 @@ func (t *Terminal) ShowOutput() {
 	t.hideOutput = false
 }
 
-func (t *Terminal) canOutput() bool {
+func (t *Terminal) hideAllOutput() bool {
 	t.outputMutex.RLock()
 	defer t.outputMutex.RUnlock()
-	return !t.hideOutput
+	return t.hideOutput
 }
