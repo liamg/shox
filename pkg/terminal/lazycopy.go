@@ -9,17 +9,28 @@ const BackOffReadInitialSleepDuration = time.Millisecond
 const BackOffReadMaxSleepDuration = time.Millisecond * 16
 
 // similar to io.Copy with sleep when no data is received
-func lazyCopy(dst io.Writer, src io.Reader) error {
+func lazyCopy(dst io.Writer, src io.Reader, hideFuncs ...func() bool) error {
 
 	buffer := make([]byte, 4096)
 
 	backOffDelay := BackOffReadInitialSleepDuration
 
+	var hide bool
+
 	for {
 		size, err := src.Read(buffer)
 		if size > 0 {
-			if _, err := dst.Write(buffer[:size]); err != nil {
-				return err
+			hide = false
+			for _, f := range hideFuncs {
+				if f() {
+					hide = true
+					break
+				}
+			}
+			if !hide {
+				if _, err := dst.Write(buffer[:size]); err != nil {
+					return err
+				}
 			}
 			backOffDelay = BackOffReadInitialSleepDuration
 		}

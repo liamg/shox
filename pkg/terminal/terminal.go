@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"sync"
 	"syscall"
 
 	"github.com/liamg/shox/pkg/decorators"
@@ -22,6 +23,8 @@ type Terminal struct {
 	proxy         *proxy.Proxy
 	pty           *os.File
 	enableNesting bool
+	hideOutput    bool
+	outputMutex sync.RWMutex
 }
 
 // NewTerminal creates a new terminal instance
@@ -130,8 +133,26 @@ func (t *Terminal) Run() error {
 
 	// Copy stdin to the pty and the pty to stdout.
 	go func() { _ = lazyCopy(t.pty, os.Stdin) }()
-	go func() { _ = lazyCopy(os.Stdout, t.proxy) }()
+	go func() { _ = lazyCopy(os.Stdout, t.proxy, t.canOutput) }()
 	_ = lazyCopy(t.proxy, t.pty)
 	fmt.Printf("\r\n")
 	return nil
+}
+
+func (t *Terminal) HideOutput() {
+	t.outputMutex.Lock()
+	defer t.outputMutex.Unlock()
+	t.hideOutput = true
+}
+
+func (t *Terminal) ShowOutput() {
+	t.outputMutex.Lock()
+	defer t.outputMutex.Unlock()
+	t.hideOutput = false
+}
+
+func (t *Terminal) canOutput() bool {
+	t.outputMutex.RLock()
+	defer t.outputMutex.RUnlock()
+	return !t.hideOutput
 }
