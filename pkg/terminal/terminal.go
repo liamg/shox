@@ -24,7 +24,8 @@ type Terminal struct {
 	pty           *os.File
 	enableNesting bool
 	hideOutput    bool
-	outputMutex sync.RWMutex
+	outputMutex   sync.RWMutex
+	motd          string
 }
 
 // NewTerminal creates a new terminal instance
@@ -44,6 +45,11 @@ func NewTerminal() *Terminal {
 // SetShell sets the shell program being used by the terminal
 func (t *Terminal) SetShell(shell string) {
 	t.shell = shell
+}
+
+// SetMOTD sets the motd to write to the terminal before the main command is launched
+func (t *Terminal) SetMOTD(motd string) {
+	t.motd = motd
 }
 
 // SetDir sets the directory the shell will start in (CWD)
@@ -82,7 +88,7 @@ func (t *Terminal) Run() error {
 
 	t.proxy.Start()
 	defer t.proxy.Close()
-	t.proxy.Write([]byte("\033c")) // reset term
+	t.proxy.Write([]byte(fmt.Sprintf("\x1bc%s", t.motd))) // reset term and write motd
 
 	// Create arbitrary command.
 	c := exec.Command(t.shell)
