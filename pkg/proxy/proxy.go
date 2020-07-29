@@ -164,6 +164,7 @@ func (p *Proxy) process() {
 	for {
 		select {
 		case b := <-p.workChan:
+
 			if b == 0x1b {
 				output, original, redraw := p.proxyANSICommand(p.workChan)
 				if original != nil {
@@ -222,12 +223,16 @@ func (p *Proxy) redraw() {
 	if !p.canRender {
 		return
 	}
+	//save cursor pos
+	p.writeOutput([]byte("\x1b[s"))
 	for _, decorator := range p.decorators {
 		if !decorator.IsVisible() {
 			continue
 		}
-		decorator.Draw(p.realRows, p.realCols)
+		decorator.Draw(p.realRows, p.realCols, p.writeOutput)
 	}
+	// restore cursor position
+	p.writeOutput([]byte(fmt.Sprintf("\x1b[u")))
 }
 
 func (p *Proxy) writeOutput(data []byte) {

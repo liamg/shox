@@ -12,8 +12,8 @@ const (
 
 // Decorator is an entity which modifies the terminal output in a desirable way
 type Decorator interface {
-	Draw(rows uint16, cols uint16) // Draw renders the decorator to StdOut
-	GetAnchor() Anchor             // GetAnchor returns the anchor e.g. Top/Bottom
-	GetHeight() (rows uint16)      // GetHeight returns the height of the decorator in terminal character rows
+	Draw(rows uint16, cols uint16, output func(data []byte)) // Draw renders the decorator to StdOut
+	GetAnchor() Anchor                                       // GetAnchor returns the anchor e.g. Top/Bottom
+	GetHeight() (rows uint16)                                // GetHeight returns the height of the decorator in terminal character rows
 	IsVisible() bool
 }

@@ -59,19 +59,22 @@ func (b *StatusBar) SetFg(colour ansi.Colour) {
 }
 
 // Draw renders the decorator to StdOut
-func (b *StatusBar) Draw(rows uint16, cols uint16) {
+func (b *StatusBar) Draw(rows uint16, cols uint16, writeFunc func(data []byte)) {
 
 	var row, col uint16
 	switch b.anchor {
 	case AnchorBottom:
 		row = rows - 1
 	}
-	ansi.SaveCursorPosition()
-	ansi.MoveCursorTo(row+1, col+1)
-	ansi.ClearLine()
+
+	// move cursor to status bar location
+	writeFunc([]byte(fmt.Sprintf("\033[%d;%dH", row+1, col+1)))
+
+	// clear line
+	writeFunc([]byte("\x1b[K"))
 
 	// set colours
-	fmt.Printf("\r\033[%dm\033[%dm", b.bg, b.fg)
+	writeFunc([]byte(fmt.Sprintf("\r\033[%dm\033[%dm", b.bg, b.fg)))
 
 	segments := strings.SplitN(b.format, "|", 3)
 	colSize := int(cols) / len(segments)
@@ -93,15 +96,14 @@ func (b *StatusBar) Draw(rows uint16, cols uint16) {
 			output = padLeft(output, colSize)
 		}
 
-		fmt.Printf("%s", output)
+		writeFunc([]byte(output))
 
 	}
 
 	for i := uint16(0); i < b.padding; i++ {
-		fmt.Printf("\n")
+		writeFunc([]byte{0x0a})
 	}
 
-	ansi.RestoreCursorPosition()
 }
 
 // SetPadding sets a vertical padding on the status bar
