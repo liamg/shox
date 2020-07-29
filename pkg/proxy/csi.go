@@ -19,6 +19,7 @@ func (p *Proxy) handleCSI(pty chan byte) (output []byte, original []byte, redraw
 		'h': p.csiSetModeHandler,
 		'l': p.csiResetModeHandler,
 		'J': p.csiEraseInDisplayHandler,
+		'r': p.csiSetMarginHandler,
 	}
 
 	var final byte
@@ -136,6 +137,13 @@ func (p *Proxy) csiLinePositionAbsolute(params []string, intermediate string) (o
 	return []byte(fmt.Sprintf("\033[%dd", newRow)), false, nil
 }
 
+// CSI Pt Pb r
+func (p *Proxy) csiSetMarginHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
+	// pass through command, and inject reset position afterwards
+	row, col := p.HandleCoordinates(0, 0)
+	return []byte(fmt.Sprintf("\033[%d;%dH", row+1, col+1)), true, ErrorCommandNotSupported
+}
+
 // CSI Ps J
 func (p *Proxy) csiEraseInDisplayHandler(params []string, intermediate string) (output []byte, redraw bool, err error) {
 
@@ -151,7 +159,7 @@ func (p *Proxy) csiEraseInDisplayHandler(params []string, intermediate string) (
 	switch n {
 	case "2", "3":
 		row, col := p.HandleCoordinates(0, 0)
-		return []byte(fmt.Sprintf("\033[%d;%dH", row, col)), true, ErrorCommandNotSupported
+		return []byte(fmt.Sprintf("\033[%d;%dH", row+1, col+1)), true, ErrorCommandNotSupported
 	}
 
 	return nil, false, ErrorCommandNotSupported

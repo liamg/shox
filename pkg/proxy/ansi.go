@@ -17,7 +17,7 @@ func (p *Proxy) proxyANSICommand(input chan byte) (output []byte, original []byt
 	switch b {
 	case 'c': //RIS
 		row, col := p.HandleCoordinates(0, 0)
-		output := []byte(fmt.Sprintf("\033[%d;%dH", row, col))
+		output := []byte(fmt.Sprintf("\033[%d;%dH", row+1, col+1))
 		return output, original, true
 	case '[': // CSI
 		output, original2, redraw, err := p.handleCSI(input)
