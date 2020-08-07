@@ -77,7 +77,7 @@ func (t *Terminal) ForceRedraw() {
 }
 
 // Run starts the terminal/shell proxying process
-func (t *Terminal) Run() error {
+func (t *Terminal) Run(commands ...string) error {
 
 	if !t.enableNesting {
 		if os.Getenv("SHOX") != "" {
@@ -136,6 +136,10 @@ func (t *Terminal) Run() error {
 		panic(err)
 	}
 	defer func() { _ = terminal.Restore(int(os.Stdin.Fd()), oldState) }() // Best effort.
+
+	for _, command := range commands {
+		_, _ = t.pty.Write([]byte(command + "\n"))
+	}
 
 	// Copy stdin to the pty and the pty to stdout.
 	go func() { _ = lazyCopy(t.pty, os.Stdin) }()
