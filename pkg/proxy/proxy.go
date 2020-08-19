@@ -27,6 +27,7 @@ type Proxy struct {
 	realCols              uint16
 	canRender             bool
 	redrawChan            chan struct{}
+	pauseDrawing          bool
 }
 
 // NewProxy creates a new proxy instance
@@ -220,11 +221,11 @@ func (p *Proxy) requestRedraw() {
 func (p *Proxy) redraw() {
 	p.decMutex.Lock()
 	defer p.decMutex.Unlock()
-	if !p.canRender {
+	if !p.canRender || p.pauseDrawing {
 		return
 	}
 	//save cursor pos
-	p.writeOutput([]byte("\x1b[s"))
+	p.writeOutput([]byte("\x1b7"))
 	for _, decorator := range p.decorators {
 		if !decorator.IsVisible() {
 			continue
@@ -232,7 +233,7 @@ func (p *Proxy) redraw() {
 		decorator.Draw(p.realRows, p.realCols, p.writeOutput)
 	}
 	// restore cursor position
-	p.writeOutput([]byte(fmt.Sprintf("\x1b[u")))
+	p.writeOutput([]byte(fmt.Sprintf("\x1b8")))
 }
 
 func (p *Proxy) writeOutput(data []byte) {
