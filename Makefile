@@ -4,8 +4,8 @@ build:
 	./scripts/build.sh
 
 test:
-	go test -race ./...
+	go test -mod=vendor -race ./...
 
 run:
-	go build ./cmd/shox
+	go build -mod=vendor ./cmd/shox
 	./shox

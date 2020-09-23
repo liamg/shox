@@ -1,10 +1,10 @@
 module github.com/liamg/shox
 
-go 1.13
+go 1.15
 
 require (
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
-	github.com/creack/pty v1.1.9
+	github.com/creack/pty v1.1.11
 	github.com/distatus/battery v0.10.0
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/mattn/go-runewidth v0.0.8
