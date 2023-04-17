@@ -21,12 +21,16 @@ github.com/shirou/gopsutil/internal/common
 github.com/shirou/gopsutil/mem
 # github.com/stretchr/testify v1.5.1
 ## explicit
-# golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
+# golang.org/x/crypto v0.1.0
 ## explicit
 golang.org/x/crypto/ssh/terminal
-# golang.org/x/sys v0.0.0-20190912141932-bc967efca4b8
+# golang.org/x/sys v0.1.0
+golang.org/x/sys/internal/unsafeheader
+golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
+# golang.org/x/term v0.1.0
+golang.org/x/term
 # gopkg.in/yaml.v2 v2.2.8
 ## explicit
 gopkg.in/yaml.v2
