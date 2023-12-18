@@ -10,6 +10,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.8
 	github.com/shirou/gopsutil v2.20.1+incompatible
 	github.com/stretchr/testify v1.5.1 // indirect
-	golang.org/x/crypto v0.1.0
+	golang.org/x/crypto v0.17.0
 	gopkg.in/yaml.v2 v2.2.8
 )
